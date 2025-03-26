@@ -43,6 +43,9 @@ for _ in range(1000):
 p.setJointMotorControl2(bodyIndex=boxId, jointIndex=1, targetVelocity=0, controlMode=p.VELOCITY_CONTROL, force=0)
 p.setJointMotorControl2(bodyIndex=boxId, jointIndex=2, targetVelocity=0, controlMode=p.VELOCITY_CONTROL, force=0)
 
+linkState = p.getLinkState(boxId, linkIndex=3)
+x0 = linkState[0][0]
+z0 = linkState[0][2]
 
 xd = 0.1
 zd = 1.0
@@ -80,15 +83,12 @@ for idx in range(len(logTime)):
 
     logX[idx] = xSim2
     logZ[idx] = zSim2
-    # print(f"THEOR2: {xTheor2} {zTheor2}")
-    # print(f"SIMUL2: {xSim2} {zSim2}")
 
+    # Jacobian
     J = np.array([[-L*np.cos(th1)-L*np.cos(th1+th2), -L*np.cos(th1+th2)],
                   [L*np.sin(th1)+L*np.sin(th1+th2), L*np.sin(th1+th2)]])
-    dth = np.array([[dth1],[dth2]])
 
     w = 10*np.linalg.inv(J) @ -np.array([[xSim2-xd],[zSim2-zd]])
-    # print(w)
     p.setJointMotorControlArray(bodyIndex=boxId, jointIndices=jointIndices, targetVelocities=[w[0,0],w[1,0]], controlMode=p.VELOCITY_CONTROL)
 
 
@@ -102,7 +102,7 @@ for idx in range(len(logTime)):
     logCtrl[idx] = trq
 
     p.stepSimulation()
-    time.sleep(dt)
+    # time.sleep(dt)
 # p.disconnect()
 
 xyzPos = p.getLinkState(boxId, 3)[0]
@@ -140,5 +140,13 @@ plt.plot(logTime, logZ, label="Z")
 plt.plot([logTime[0],logTime[-1]], [zd, zd],'r--', label="ref")
 plt.grid(True)
 plt.legend()
+
+# plot XZ
+plt.figure()
+plt.plot(logX, logZ, label="XZ")
+plt.plot([x0, xd], [z0, zd],'r--', label="ref")
+plt.grid(True)
+plt.legend()
+
 
 plt.show()
