@@ -38,7 +38,7 @@ def updateCamPos(cam):
     rotMat = p.getMatrixFromQuaternion(quat)
     rotMat = np.reshape(np.array(rotMat),(3,3))
     camera.set_new_position(xyz, rotMat)
-    
+
 
 camera = Camera(imgSize = [IMG_SIDE, IMG_SIDE])
 
@@ -88,6 +88,10 @@ for t in logTime[1:]:
         updateCamPos(camera)
         img = camera.get_frame()
 
+        corners, markerIds, rejectedCandidates = detector.detectMarkers(img)
+        sd0 = np.reshape(np.array(corners[0][0]),(8,1))
+        sd0 = np.array([(s-IMG_HALF)/IMG_HALF for s in sd0])
+
     p.setJointMotorControlArray(bodyIndex=boxId, jointIndices=jointIndices, targetVelocities=[0,0,0.1], controlMode=p.VELOCITY_CONTROL)
-    
+
 p.disconnect()
