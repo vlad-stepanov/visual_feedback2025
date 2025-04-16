@@ -7,7 +7,6 @@ IMG_SIDE = 300
 IMG_HALF = IMG_SIDE/2
 camera = Camera(imgSize = [IMG_SIDE, IMG_SIDE])
 
-L = 0.5  # link length
 Z0 = 0.3 # camera height
 dt = 1/240 # pybullet simulation step
 coef = 0.5 # proportional control coefficient
