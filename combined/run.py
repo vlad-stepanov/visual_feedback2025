@@ -42,6 +42,15 @@ def updateCamPos(cam):
 
 # start pybullet and move point of view
 physicsClient = p.connect(p.GUI, options="--background_color_red=1 --background_color_blue=1 --background_color_green=1")
+
+# Debug function
+def add_dot(pt, color, label):
+    p.addUserDebugLine(pt, [pt[0], pt[1], pt[2] - 0.1], color, 2)
+    p.addUserDebugText(label, pt, color, 1.5)
+
+for pt, label in [([0,0,0],"0"),([1,0,0],"(1, 0)"),([0,1,0],"(0, 1)"),([1,1,0],"(1, 1)"),([1,0.5,0],"(1, 0.5)"),([0.5,1,0],"(0.5, 1)")]:
+    add_dot(pt, [0,0,0], label)
+
 p.resetDebugVisualizerCamera(
     cameraDistance=0.5,
     cameraYaw=-90,
